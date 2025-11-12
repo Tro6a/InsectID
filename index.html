@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -43,7 +43,7 @@
             height: 100%;
             object-fit: cover;
             object-position: center;
-            opacity: 0.15; /* Легкая прозрачность для фона */
+            opacity: 0.55; /* Легкая прозрачность для фона */
             filter: brightness(1.2); /* Немного осветляем */
         }
         .hero-content {
@@ -81,6 +81,13 @@
             margin-bottom: 10px;
             color: var(--text-secondary-dark);
         }
+        
+        /* Дополнительные стили для основного блока */
+        #main-app-card {
+            min-height: 500px; /* Чтобы избежать сильного скачка при загрузке */
+            display: flex;
+            flex-direction: column;
+        }
     </style>
 </head>
 <body>
@@ -95,7 +102,7 @@
     <!-- Hero Section (Light, Image Background) -->
     <section class="hero-section text-center text-dark">
         <!-- Вставленное пользователем изображение -->
-        <img src="unnamed (1).jpg" alt="Вредитель на листе с голографическим интерфейсом" class="hero-bg-image">
+        <img src="https://generativelanguage.googleapis.com/v1beta/projects/gemini-pro-1466953256038/locations/us-central1/images/29c5e3f3-078b-4a55-8968-300e844a49ed" alt="Вредитель на листе с голографическим интерфейсом" class="hero-bg-image">
         <div class="hero-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-5xl tracking-tight font-extrabold sm:text-6xl md:text-7xl">
                 <span class="block text-gray-800">Идентификация Вредителей</span>
@@ -115,7 +122,7 @@
     <!-- 3 Преимущества (Инфографика) -->
     <section class="py-16 bg-background-light text-text-dark">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h3 class="text-3xl font-bold text-center mb-12 text-gray-800">3 Главных Преимущества</h3>
+            <h3 class="text-3xl font-bold text-center mb-12 text-gray-800">Преимущества ИИ-анализа</h3>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 
                 <!-- 1. Скорость -->
@@ -137,7 +144,7 @@
                         </svg>
                     </div>
                     <h4 class="text-xl font-semibold mb-2 text-gray-800">Высокая Точность AI</h4>
-                    <p class="text-gray-500 text-sm">Используем 90 летний опыт для минимизации ошибок.</p>
+                    <p class="text-gray-500 text-sm">Используем передовые модели Google для минимизации ошибок.</p>
                 </div>
 
                 <!-- 3. Решения -->
@@ -155,15 +162,17 @@
         </div>
     </section>
 
-    <!-- Основной блок загрузки и результатов -->
+    <!-- Основной блок загрузки и результатов (Единая Карточка) -->
     <section id="upload-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <h3 class="text-3xl font-bold mb-12 text-center text-gray-800">Рабочий процесс</h3>
+        
+        <div id="main-app-card" class="max-w-xl mx-auto bg-card rounded-xl p-6 sm:p-8 shadow-2xl border border-gray-200">
+            <h3 class="text-3xl font-bold mb-8 text-center text-gray-800">ИИ детектор</h3>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
-            <!-- Левая колонка: Ввод изображения -->
-            <div class="bg-card rounded-xl p-6 shadow-lg border border-gray-200">
-                <h4 class="text-2xl font-bold mb-5 text-primary">Шаг 1: Загрузка Изображения</h4>
-                
+            <!-- 1. ВИД ЗАГРУЗКИ (upload-view): Начальное состояние. -->
+            <div id="upload-view" class="text-center">
+                <p id="initial-message" class="text-gray-500 mb-6 text-lg">
+                    Загрузите фотографию повреждения или сделайте снимок, чтобы начать анализ.
+                </p>
                 <div class="upload-area rounded-lg p-6 bg-gray-50 mb-5">
                     <input type="file" id="image-upload" accept="image/*" class="hidden" onchange="handleFileSelect(event)">
                     
@@ -176,12 +185,12 @@
                     </button>
                     <p class="text-gray-400 mb-3 text-sm">— ИЛИ —</p>
                     <button id="camera-button" class="flex items-center space-x-3 text-lg font-semibold text-gray-500 transition duration-150 ease-in-out hover:text-gray-700">
-                        <!-- SVG Icon for Camera -->
+                        <!-- SVG Icon for Camera (Initial state) -->
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
-                        <span>Использовать Камеру</span>
+                        <span id="camera-button-text">Использовать Камеру</span>
                     </button>
 
                     <!-- Элементы камеры -->
@@ -192,80 +201,86 @@
                         </button>
                     </div>
                 </div>
+            </div>
 
-                <!-- Превью изображения -->
-                <div id="preview-container" class="mt-6 p-4 bg-gray-50 rounded-lg shadow-inner hidden border border-gray-200">
-                    <h4 class="text-lg font-semibold mb-3 border-b border-gray-200 pb-2 text-gray-800">Превью для анализа</h4>
-                    <img id="image-preview" class="max-w-full h-auto rounded-md mb-4" style="max-height: 300px; margin: 0 auto;" alt="Превью загруженного изображения">
+            <!-- 2. ВИД ПРЕВЬЮ (preview-view): Появляется после выбора/снимка. -->
+            <div id="preview-view" class="hidden">
+                <h4 class="text-lg font-semibold mb-4 border-b border-gray-200 pb-2 text-gray-800 text-center">Превью для анализа</h4>
+                <div class="flex flex-col items-center">
+                    <img id="image-preview" class="max-w-full h-auto rounded-lg mb-4 border border-gray-300 shadow-md" style="max-height: 300px;" alt="Превью загруженного изображения">
                     <p id="image-error" class="text-red-500 mt-2 hidden text-sm">Ошибка: Файл слишком большой или не является изображением.</p>
                     
                     <button id="analyze-button" onclick="analyzeImage()" class="mt-4 w-full bg-primary text-white font-bold py-3 px-4 rounded-lg shadow-lg hover-bg-primary transition duration-150 ease-in-out disabled:opacity-50" disabled>
                         Шаг 2: Анализировать!
                     </button>
-                </div>
-
-                <canvas id="hidden-canvas" style="display: none;"></canvas>
-
-            </div>
-
-            <!-- Правая колонка: Результат -->
-            <div class="bg-card rounded-xl p-6 shadow-lg border border-gray-200">
-                <h4 class="text-2xl font-bold mb-5 text-primary">Шаг 3: Результаты Анализа</h4>
-
-                <div id="results-container" class="min-h-[400px]">
-                    <!-- Индикаторы загрузки/ошибки -->
-                    <div id="initial-message" class="text-center py-20 text-gray-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-10 w-10 text-primary mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        <p>Загрузите фотографию повреждения, чтобы начать анализ.</p>
-                    </div>
-
-                    <div id="loading-indicator" class="text-center py-20 hidden">
-                        <div class="animate-spin rounded-full h-10 w-10 border-b-4 border-primary border-t-4 mx-auto mb-3"></div>
-                        <p class="text-gray-500 mt-3">Искусственный интеллект InsectID анализирует изображение...</p>
-                    </div>
-
-                    <div id="error-message" class="hidden text-center py-20 text-red-500">
-                        <p class="font-semibold text-lg">Произошла ошибка при анализе.</p>
-                        <p class="text-sm mt-2 text-gray-600" id="error-details"></p>
-                    </div>
-
-                    <!-- Контейнер для сгенерированного отчета -->
-                    <div id="report-output" class="result-card hidden text-gray-700">
-                        <!-- Сюда будет вставлен сгенерированный текст -->
-                    </div>
-
-                    <!-- Контейнер для источников -->
-                    <div id="sources-output" class="mt-6 pt-4 border-t border-gray-200 hidden">
-                        <h4 class="text-base font-semibold mb-2 text-gray-800">Источники информации:</h4>
-                        <ul id="sources-list" class="text-xs text-gray-500 space-y-1"></ul>
-                    </div>
+                    
+                    <button onclick="updateUIState('upload');" class="mt-4 text-sm text-gray-500 hover:text-primary-light transition duration-150">
+                        Выбрать другое фото
+                    </button>
                 </div>
             </div>
+
+            <!-- 3. ВИД РЕЗУЛЬТАТОВ (results-view): Во время/после анализа. -->
+            <div id="results-view" class="hidden flex-col items-center w-full">
+                 <button onclick="updateUIState('upload');" class="self-start text-sm text-gray-500 hover:text-primary-light transition duration-150 mb-4 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Начать новый анализ
+                </button>
+                
+                <!-- Индикаторы загрузки/ошибки -->
+                <div id="loading-indicator" class="text-center py-10 hidden">
+                    <div class="animate-spin rounded-full h-10 w-10 border-b-4 border-primary border-t-4 mx-auto mb-3"></div>
+                    <p class="text-gray-500 mt-3 font-semibold">Искусственный интеллект InsectID анализирует изображение...</p>
+                </div>
+
+                <div id="error-message" class="hidden text-center py-10 w-full bg-red-50 border border-red-200 rounded-lg p-4">
+                    <p class="font-semibold text-lg text-red-600">Произошла ошибка при анализе.</p>
+                    <p class="text-sm mt-2 text-red-500" id="error-details"></p>
+                </div>
+
+                <!-- Контейнер для сгенерированного отчета -->
+                <div id="report-output" class="result-card hidden text-gray-700 w-full mt-4">
+                    <!-- Сюда будет вставлен сгенерированный текст -->
+                </div>
+
+                <!-- Контейнер для источников -->
+                <div id="sources-output" class="mt-6 pt-4 border-t border-gray-200 hidden w-full">
+                    <h4 class="text-base font-semibold mb-2 text-gray-800">Источники информации:</h4>
+                    <ul id="sources-list" class="text-xs text-gray-500 space-y-1"></ul>
+                </div>
+            </div>
+
+            <canvas id="hidden-canvas" style="display: none;"></canvas>
+
         </div>
     </section>
 
     <!-- Подвал -->
     <footer class="bg-white border-t border-gray-200 text-gray-500 mt-12 py-6">
         <div class="max-w-7xl mx-auto px-4 text-center">
-            <p>&copy; 2024 InsectID. Powered by Trofim Dreganu.</p>
+            <p>&copy; 2024 InsectID. Powered by Google Gemini API.</p>
         </div>
     </footer>
 
     <script>
         // --- Настройки API и Константы ---
-        // Ключ API больше не используется на клиенте. Запросы идут через прокси-функцию Netlify.
-        const API_URL = "/api/gemini-proxy"; // Путь к прокси-функции Netlify
+        const API_URL = "/api/gemini-proxy"; 
         const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5 MB
+        
+        // --- Элементы UI ---
+        const uploadView = document.getElementById('upload-view');
+        const previewView = document.getElementById('preview-view');
+        const resultsView = document.getElementById('results-view');
+        
         const videoFeed = document.getElementById('video-feed');
         const cameraView = document.getElementById('camera-view');
         const captureButton = document.getElementById('capture-button');
         const cameraButton = document.getElementById('camera-button');
+        const cameraButtonText = document.getElementById('camera-button-text');
         const imagePreview = document.getElementById('image-preview');
-        const previewContainer = document.getElementById('preview-container');
         const analyzeButton = document.getElementById('analyze-button');
-        const initialMessage = document.getElementById('initial-message');
         const loadingIndicator = document.getElementById('loading-indicator');
         const errorMessageDiv = document.getElementById('error-message');
         const errorDetails = document.getElementById('error-details');
@@ -273,42 +288,55 @@
         const sourcesOutput = document.getElementById('sources-output');
         const sourcesList = document.getElementById('sources-list');
         const canvas = document.getElementById('hidden-canvas');
+        
         let currentBase64Image = null;
         let videoStream = null;
 
         // --- Вспомогательные функции для UI и Base64 ---
 
         /**
-         * Переключает видимость элементов UI для разных состояний.
-         * Шаг 3 (Результаты Анализа) должен появляться только после выдачи.
-         * @param {string} state - 'initial', 'loading', 'error', 'results', 'preview-ready'
+         * Переключает видимость основных UI-видов для разных состояний.
+         * @param {string} state - 'upload', 'preview', 'loading', 'results', 'error'
          */
         function updateUIState(state) {
-            // Скрываем все информационные блоки
-            initialMessage.classList.add('hidden');
+            // Скрываем все основные виды
+            uploadView.classList.add('hidden');
+            previewView.classList.add('hidden');
+            resultsView.classList.add('hidden');
+            resultsView.classList.remove('flex-col'); // Убрать flex-col на время скрытия
+
+            // Скрываем все внутренние блоки результатов
             loadingIndicator.classList.add('hidden');
             errorMessageDiv.classList.add('hidden');
             reportOutput.classList.add('hidden');
             sourcesOutput.classList.add('hidden');
             
-            // Кнопка анализа отключается по умолчанию, включается только при готовности превью
-            analyzeButton.disabled = true;
+            // Если камера была активна, останавливаем ее при переходе на другой вид
+            if (state !== 'upload') {
+                stopCamera();
+            }
 
-            if (state === 'initial') {
-                initialMessage.classList.remove('hidden');
-            } else if (state === 'loading') {
-                loadingIndicator.classList.remove('hidden');
-                reportOutput.innerHTML = ''; // Очищаем старый отчет
-            } else if (state === 'error') {
-                errorMessageDiv.classList.remove('hidden');
-                analyzeButton.disabled = false; // Разрешить повторную попытку после ошибки
-            } else if (state === 'preview-ready') {
+            if (state === 'upload') {
+                uploadView.classList.remove('hidden');
+            } else if (state === 'preview') {
+                previewView.classList.remove('hidden');
                 analyzeButton.disabled = false;
-                initialMessage.classList.remove('hidden'); // Показать начальное сообщение
+            } else if (state === 'loading') {
+                resultsView.classList.remove('hidden', 'flex-col');
+                resultsView.classList.add('flex-col');
+                loadingIndicator.classList.remove('hidden');
+                reportOutput.innerHTML = ''; 
+                analyzeButton.disabled = true;
             } else if (state === 'results') {
-                // Шаг 3: Показываем только при наличии результатов
+                resultsView.classList.remove('hidden', 'flex-col');
+                resultsView.classList.add('flex-col');
                 reportOutput.classList.remove('hidden');
-                // Видимость sourcesOutput обрабатывается в analyzeImage
+                analyzeButton.disabled = false; // Можно разрешить новый анализ, если захотим
+            } else if (state === 'error') {
+                resultsView.classList.remove('hidden', 'flex-col');
+                resultsView.classList.add('flex-col');
+                errorMessageDiv.classList.remove('hidden');
+                analyzeButton.disabled = false; // Разрешить повторную попытку
             }
         }
 
@@ -340,8 +368,7 @@
                 if (file.size > MAX_IMAGE_SIZE) {
                     document.getElementById('image-error').classList.remove('hidden');
                     currentBase64Image = null;
-                    previewContainer.classList.add('hidden');
-                    updateUIState('initial'); 
+                    updateUIState('preview'); // Показываем превью с ошибкой
                     return;
                 }
                 document.getElementById('image-error').classList.add('hidden');
@@ -349,13 +376,12 @@
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     imagePreview.src = e.target.result;
-                    previewContainer.classList.remove('hidden');
                     currentBase64Image = e.target.result.split(',')[1]; // Сохраняем Base64 без mimeType
-                    updateUIState('preview-ready');
+                    updateUIState('preview');
                 };
                 reader.readAsDataURL(file);
-                // Если камера активна, останавливаем ее
-                stopCamera();
+                // Очищаем файл-инпут, чтобы можно было снова выбрать тот же файл
+                event.target.value = '';
             }
         }
 
@@ -364,35 +390,23 @@
          */
         cameraButton.onclick = async () => {
             if (videoStream) {
-                // Если камера активна, останавливаем ее
                 stopCamera();
                 cameraView.classList.add('hidden');
-                cameraButton.innerHTML = `
-                        <!-- SVG Icon for Camera -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                        <span>Использовать Камеру</span>
-                    `;
             } else {
-                // Запускаем камеру
                 try {
                     videoStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
                     videoFeed.srcObject = videoStream;
                     await videoFeed.play();
                     cameraView.classList.remove('hidden');
-                    cameraButton.innerHTML = `
-                        <!-- SVG Icon for Stop -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2A9 9 0 111 12a9 9 0 0118 0z" />
-                        </svg>
-                        <span>Остановить Камеру</span>
-                    `;
-                    // Очищаем превью файла
-                    previewContainer.classList.add('hidden');
-                    currentBase64Image = null;
-                    updateUIState('initial');
+                    cameraButtonText.textContent = 'Остановить Камеру';
+                    cameraButton.querySelector('svg').classList.add('text-red-500');
+
+                    // Убедимся, что upload-view видим, но скрываем preview-view
+                    updateUIState('upload');
+                    
+                    // Дополнительно: скрываем кнопки upload
+                    document.getElementById('image-upload').closest('button').classList.add('hidden');
+
                 } catch (err) {
                     console.error("Ошибка доступа к камере: ", err);
                     errorDetails.textContent = `Ошибка доступа к камере: ${err.name}`;
@@ -409,14 +423,14 @@
                 videoStream.getTracks().forEach(track => track.stop());
                 videoStream = null;
                 videoFeed.srcObject = null;
-                cameraButton.innerHTML = `
-                        <!-- SVG Icon for Camera -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                        <span>Использовать Камеру</span>
-                    `;
+                
+                // Восстанавливаем кнопки upload
+                document.getElementById('image-upload').closest('button').classList.remove('hidden');
+                
+                // Восстанавливаем состояние кнопки камеры
+                cameraButtonText.textContent = 'Использовать Камеру';
+                cameraButton.querySelector('svg').classList.remove('text-red-500');
+                cameraView.classList.add('hidden');
             }
         }
 
@@ -436,13 +450,11 @@
                 // Получаем base64
                 const dataURL = canvas.toDataURL('image/jpeg', 0.9); // JPEG для меньшего размера
                 imagePreview.src = dataURL;
-                previewContainer.classList.remove('hidden');
                 currentBase64Image = dataURL.split(',')[1];
-                updateUIState('preview-ready');
-
-                // Опционально: останавливаем камеру после снимка
+                
+                // Останавливаем камеру и переходим к превью
                 stopCamera();
-                cameraView.classList.add('hidden');
+                updateUIState('preview');
             }
         };
 
@@ -605,10 +617,9 @@
 
         // Инициализация
         document.addEventListener('DOMContentLoaded', () => {
-            updateUIState('initial');
+            updateUIState('upload');
         });
 
     </script>
 </body>
 </html>
-
