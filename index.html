@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -95,7 +95,7 @@
     <!-- Hero Section (Light, Image Background) -->
     <section class="hero-section text-center text-dark">
         <!-- Вставленное пользователем изображение -->
-        <img src="unnamed%20(1).jpg" alt="Вредитель на листе с голографическим интерфейсом" class="hero-bg-image">
+        <img src="https://generativelanguage.googleapis.com/v1beta/projects/gemini-pro-1466953256038/locations/us-central1/images/29c5e3f3-078b-4a55-8968-300e844a49ed" alt="Вредитель на листе с голографическим интерфейсом" class="hero-bg-image">
         <div class="hero-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-5xl tracking-tight font-extrabold sm:text-6xl md:text-7xl">
                 <span class="block text-gray-800">Идентификация Вредителей</span>
@@ -255,10 +255,8 @@
 
     <script>
         // --- Настройки API и Константы ---
-        // ВАЖНО: Вставьте ваш реальный API ключ от Google Gemini, если запускаете локально. 
-        // В этой среде (Canvas) ключ предоставляется автоматически.
-        const API_KEY = "AIzaSyCHUy2Lh80basW5kQ7EPXGdk4bGO1Pzjjs"; 
-        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${API_KEY}`;
+        // Ключ API больше не используется на клиенте. Запросы идут через прокси-функцию Netlify.
+        const API_URL = "/api/gemini-proxy"; // Путь к прокси-функции Netlify
         const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5 MB
         const videoFeed = document.getElementById('video-feed');
         const cameraView = document.getElementById('camera-view');
@@ -448,10 +446,10 @@
             }
         };
 
-        // --- Логика вызова Gemini API ---
+        // --- Логика вызова Gemini API через Netlify Proxy ---
 
         /**
-         * Вызывает API Gemini для анализа изображения.
+         * Вызывает API Gemini для анализа изображения через Netlify Proxy.
          */
         async function analyzeImage() {
             if (!currentBase64Image) {
@@ -466,13 +464,14 @@
             
             const userQuery = "Проанализируйте это изображение повреждения растения и предоставьте полный отчет согласно структуре.";
 
+            // Структура payload соответствует требованиям прокси-функции (без API ключа)
             const payload = {
                 contents: [{
                     parts: [
                         { text: userQuery },
                         {
                             inlineData: {
-                                mimeType: "image/jpeg", // MIME-тип должен соответствовать формату
+                                mimeType: "image/jpeg", 
                                 data: currentBase64Image
                             }
                         }
@@ -491,6 +490,7 @@
 
             for (let attempt = 0; attempt < maxRetries; attempt++) {
                 try {
+                    // Используем API_URL, указывающий на Netlify Proxy
                     const response = await fetch(API_URL, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -499,10 +499,13 @@
 
                     if (!response.ok) {
                         const errorData = await response.json();
-                        throw new Error(`API returned status ${response.status}: ${errorData.error.message}`);
+                        // Если прокси вернул ошибку, обрабатываем ее
+                        throw new Error(`Proxy status ${response.status}: ${errorData.error.message || JSON.stringify(errorData)}`);
                     }
 
                     const result = await response.json();
+                    
+                    // Прокси возвращает чистый ответ от Gemini API, как и раньше
                     const candidate = result.candidates?.[0];
 
                     if (candidate && candidate.content?.parts?.[0]?.text) {
@@ -557,7 +560,7 @@
             }
 
             // Если все попытки провалились
-            errorDetails.textContent = `Ошибка: ${lastError.message || 'Неизвестная ошибка API.'}`;
+            errorDetails.textContent = `Ошибка: ${lastError.message || 'Неизвестная ошибка прокси-сервера.'}`;
             updateUIState('error');
         }
 
