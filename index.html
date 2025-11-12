@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InsectID - Идентификация Вредителей Растений</title>
+    <!-- Подключение Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        :root {
+            --primary-color: #c81101; /* Глубокий красный акцент */
+            --primary-color-light: #e53935;
+            --background-light: #f9f9f9; /* Светлый фон */
+            --card-bg-light: #ffffff; /* Белый фон карточек */
+            --text-dark: #1f2937; /* Темный текст */
+            --text-secondary-dark: #4b5563; /* Вторичный серый текст */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-light);
+            color: var(--text-dark);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .text-primary { color: var(--primary-color); }
+        .bg-primary { background-color: var(--primary-color); }
+        .bg-card { background-color: var(--card-bg-light); }
+        .bg-primary-light { background-color: var(--primary-color-light); }
+        .hover-bg-primary:hover { background-color: var(--primary-color-light); }
+        .ring-primary:focus { --tw-ring-color: var(--primary-color); }
+        
+        /* Стили для Hero */
+        .hero-section {
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .hero-bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            opacity: 0.15; /* Легкая прозрачность для фона */
+            filter: brightness(1.2); /* Немного осветляем */
+        }
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            padding-top: 6rem;
+            padding-bottom: 6rem;
+        }
+
+        /* Стили для кнопки камеры/файла */
+        .upload-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+            border: 2px dashed #d1d5db; /* Светлая пунктирная граница */
+            transition: all 0.3s ease;
+        }
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            background-color: #f3f4f6;
+        }
+        
+        /* Стили для результата */
+        .result-card h3 {
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 8px;
+            margin-bottom: 16px;
+            font-weight: 700;
+            color: var(--text-dark);
+            font-size: 1.5rem;
+        }
+        .result-card p {
+            margin-bottom: 10px;
+            color: var(--text-secondary-dark);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Заголовок -->
+    <header class="bg-white shadow-md sticky top-0 z-50 border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <h1 class="text-3xl font-extrabold text-gray-800 tracking-widest">INSECT<span class="font-light text-primary">ID</span></h1>
+        </div>
+    </header>
+
+    <!-- Hero Section (Light, Image Background) -->
+    <section class="hero-section text-center text-dark">
+        <!-- Вставленное пользователем изображение -->
+        <img src="unnamed%20(1).jpg" alt="Вредитель на листе с голографическим интерфейсом" class="hero-bg-image">
+        <div class="hero-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-5xl tracking-tight font-extrabold sm:text-6xl md:text-7xl">
+                <span class="block text-gray-800">Идентификация Вредителей</span>
+                <span class="block text-primary mt-2">на основе AI</span>
+            </h2>
+            <p class="mt-4 text-xl text-gray-600 max-w-2xl mx-auto">
+                Мгновенно определите проблему по фотографии поврежденного растения. Получите полный отчет и решения.
+            </p>
+            <div class="mt-8">
+                <a href="#upload-section" class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-lg font-medium rounded-full text-white bg-primary shadow-lg hover-bg-primary md:text-xl transition duration-300 ease-in-out transform hover:scale-105">
+                    Начать анализ
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3 Преимущества (Инфографика) -->
+    <section class="py-16 bg-background-light text-text-dark">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h3 class="text-3xl font-bold text-center mb-12 text-gray-800">3 Главных Преимущества</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                
+                <!-- 1. Скорость -->
+                <div class="bg-card rounded-xl p-6 shadow-md border border-gray-200 text-center">
+                    <div class="text-primary mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                    <h4 class="text-xl font-semibold mb-2 text-gray-800">Мгновенный Результат</h4>
+                    <p class="text-gray-500 text-sm">Получите точное определение вредителя за считанные секунды.</p>
+                </div>
+
+                <!-- 2. Точность -->
+                <div class="bg-card rounded-xl p-6 shadow-md border border-gray-200 text-center">
+                    <div class="text-primary mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.007 12.007 0 002.944 12c-.066 1.258.077 2.515.404 3.733.328 1.218.882 2.365 1.637 3.393a11.942 11.942 0 003.543 3.018A11.996 11.996 0 0012 22c1.353 0 2.684-.258 3.939-.766a11.94 11.94 0 003.543-3.018c.755-1.028 1.309-2.175 1.637-3.393.327-1.218.47-2.475.404-3.733a12.007 12.007 0 00-.547-6.046z" />
+                        </svg>
+                    </div>
+                    <h4 class="text-xl font-semibold mb-2 text-gray-800">Высокая Точность AI</h4>
+                    <p class="text-gray-500 text-sm">Используем передовые модели Google для минимизации ошибок.</p>
+                </div>
+
+                <!-- 3. Решения -->
+                <div class="bg-card rounded-xl p-6 shadow-md border border-gray-200 text-center">
+                    <div class="text-primary mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.206 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.794 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.794 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.206 18 16.5 18s-3.332.477-4.5 1.253" />
+                        </svg>
+                    </div>
+                    <h4 class="text-xl font-semibold mb-2 text-gray-800">Полный План Борьбы</h4>
+                    <p class="text-gray-500 text-sm">Включает химические, органические и профилактические меры.</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Основной блок загрузки и результатов -->
+    <section id="upload-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <h3 class="text-3xl font-bold mb-12 text-center text-gray-800">Рабочий процесс</h3>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+            <!-- Левая колонка: Ввод изображения -->
+            <div class="bg-card rounded-xl p-6 shadow-lg border border-gray-200">
+                <h4 class="text-2xl font-bold mb-5 text-primary">Шаг 1: Загрузка Изображения</h4>
+                
+                <div class="upload-area rounded-lg p-6 bg-gray-50 mb-5">
+                    <input type="file" id="image-upload" accept="image/*" class="hidden" onchange="handleFileSelect(event)">
+                    
+                    <button onclick="document.getElementById('image-upload').click()" class="flex items-center space-x-3 text-lg font-semibold mb-3 text-gray-700 transition duration-150 ease-in-out hover:text-primary-light">
+                        <!-- SVG Icon for Upload -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                        </svg>
+                        <span>Загрузить Фотографию</span>
+                    </button>
+                    <p class="text-gray-400 mb-3 text-sm">— ИЛИ —</p>
+                    <button id="camera-button" class="flex items-center space-x-3 text-lg font-semibold text-gray-500 transition duration-150 ease-in-out hover:text-gray-700">
+                        <!-- SVG Icon for Camera -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        <span>Использовать Камеру</span>
+                    </button>
+
+                    <!-- Элементы камеры -->
+                    <div id="camera-view" class="mt-5 hidden flex flex-col items-center w-full">
+                        <video id="video-feed" class="w-full max-h-80 rounded-lg shadow-md mb-3 border border-gray-300" autoplay playsinline></video>
+                        <button id="capture-button" class="bg-primary text-white font-bold py-2 px-6 rounded-full shadow-lg hover-bg-primary transition duration-150 ease-in-out">
+                            Сделать Снимок
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Превью изображения -->
+                <div id="preview-container" class="mt-6 p-4 bg-gray-50 rounded-lg shadow-inner hidden border border-gray-200">
+                    <h4 class="text-lg font-semibold mb-3 border-b border-gray-200 pb-2 text-gray-800">Превью для анализа</h4>
+                    <img id="image-preview" class="max-w-full h-auto rounded-md mb-4" style="max-height: 300px; margin: 0 auto;" alt="Превью загруженного изображения">
+                    <p id="image-error" class="text-red-500 mt-2 hidden text-sm">Ошибка: Файл слишком большой или не является изображением.</p>
+                    
+                    <button id="analyze-button" onclick="analyzeImage()" class="mt-4 w-full bg-primary text-white font-bold py-3 px-4 rounded-lg shadow-lg hover-bg-primary transition duration-150 ease-in-out disabled:opacity-50" disabled>
+                        Шаг 2: Анализировать!
+                    </button>
+                </div>
+
+                <canvas id="hidden-canvas" style="display: none;"></canvas>
+
+            </div>
+
+            <!-- Правая колонка: Результат -->
+            <div class="bg-card rounded-xl p-6 shadow-lg border border-gray-200">
+                <h4 class="text-2xl font-bold mb-5 text-primary">Шаг 3: Результаты Анализа</h4>
+
+                <div id="results-container" class="min-h-[400px]">
+                    <!-- Индикаторы загрузки/ошибки -->
+                    <div id="initial-message" class="text-center py-20 text-gray-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-10 w-10 text-primary mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        <p>Загрузите фотографию повреждения, чтобы начать анализ.</p>
+                    </div>
+
+                    <div id="loading-indicator" class="text-center py-20 hidden">
+                        <div class="animate-spin rounded-full h-10 w-10 border-b-4 border-primary border-t-4 mx-auto mb-3"></div>
+                        <p class="text-gray-500 mt-3">Искусственный интеллект InsectID анализирует изображение...</p>
+                    </div>
+
+                    <div id="error-message" class="hidden text-center py-20 text-red-500">
+                        <p class="font-semibold text-lg">Произошла ошибка при анализе.</p>
+                        <p class="text-sm mt-2 text-gray-600" id="error-details"></p>
+                    </div>
+
+                    <!-- Контейнер для сгенерированного отчета -->
+                    <div id="report-output" class="result-card hidden text-gray-700">
+                        <!-- Сюда будет вставлен сгенерированный текст -->
+                    </div>
+
+                    <!-- Контейнер для источников -->
+                    <div id="sources-output" class="mt-6 pt-4 border-t border-gray-200 hidden">
+                        <h4 class="text-base font-semibold mb-2 text-gray-800">Источники информации:</h4>
+                        <ul id="sources-list" class="text-xs text-gray-500 space-y-1"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Подвал -->
+    <footer class="bg-white border-t border-gray-200 text-gray-500 mt-12 py-6">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p>&copy; 2024 InsectID. Powered by Google Gemini API.</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- Настройки API и Константы ---
+        // ВАЖНО: Вставьте ваш реальный API ключ от Google Gemini, если запускаете локально. 
+        // В этой среде (Canvas) ключ предоставляется автоматически.
+        const API_KEY = "AIzaSyCHUy2Lh80basW5kQ7EPXGdk4bGO1Pzjjs"; 
+        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${API_KEY}`;
+        const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5 MB
+        const videoFeed = document.getElementById('video-feed');
+        const cameraView = document.getElementById('camera-view');
+        const captureButton = document.getElementById('capture-button');
+        const cameraButton = document.getElementById('camera-button');
+        const imagePreview = document.getElementById('image-preview');
+        const previewContainer = document.getElementById('preview-container');
+        const analyzeButton = document.getElementById('analyze-button');
+        const initialMessage = document.getElementById('initial-message');
+        const loadingIndicator = document.getElementById('loading-indicator');
+        const errorMessageDiv = document.getElementById('error-message');
+        const errorDetails = document.getElementById('error-details');
+        const reportOutput = document.getElementById('report-output');
+        const sourcesOutput = document.getElementById('sources-output');
+        const sourcesList = document.getElementById('sources-list');
+        const canvas = document.getElementById('hidden-canvas');
+        let currentBase64Image = null;
+        let videoStream = null;
+
+        // --- Вспомогательные функции для UI и Base64 ---
+
+        /**
+         * Переключает видимость элементов UI для разных состояний.
+         * Шаг 3 (Результаты Анализа) должен появляться только после выдачи.
+         * @param {string} state - 'initial', 'loading', 'error', 'results', 'preview-ready'
+         */
+        function updateUIState(state) {
+            // Скрываем все информационные блоки
+            initialMessage.classList.add('hidden');
+            loadingIndicator.classList.add('hidden');
+            errorMessageDiv.classList.add('hidden');
+            reportOutput.classList.add('hidden');
+            sourcesOutput.classList.add('hidden');
+            
+            // Кнопка анализа отключается по умолчанию, включается только при готовности превью
+            analyzeButton.disabled = true;
+
+            if (state === 'initial') {
+                initialMessage.classList.remove('hidden');
+            } else if (state === 'loading') {
+                loadingIndicator.classList.remove('hidden');
+                reportOutput.innerHTML = ''; // Очищаем старый отчет
+            } else if (state === 'error') {
+                errorMessageDiv.classList.remove('hidden');
+                analyzeButton.disabled = false; // Разрешить повторную попытку после ошибки
+            } else if (state === 'preview-ready') {
+                analyzeButton.disabled = false;
+                initialMessage.classList.remove('hidden'); // Показать начальное сообщение
+            } else if (state === 'results') {
+                // Шаг 3: Показываем только при наличии результатов
+                reportOutput.classList.remove('hidden');
+                // Видимость sourcesOutput обрабатывается в analyzeImage
+            }
+        }
+
+        /**
+         * Конвертирует Blob (например, с камеры) в Base64.
+         * @param {Blob} blob
+         * @returns {Promise<string>} Base64 строка (без префикса mimeType)
+         */
+        function blobToBase64(blob) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    // Удаляем префикс "data:image/png;base64,"
+                    const base64data = reader.result.split(',')[1];
+                    resolve(base64data);
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+            });
+        }
+
+        /**
+         * Обрабатывает выбор файла пользователем.
+         * @param {Event} event
+         */
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                if (file.size > MAX_IMAGE_SIZE) {
+                    document.getElementById('image-error').classList.remove('hidden');
+                    currentBase64Image = null;
+                    previewContainer.classList.add('hidden');
+                    updateUIState('initial'); 
+                    return;
+                }
+                document.getElementById('image-error').classList.add('hidden');
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    previewContainer.classList.remove('hidden');
+                    currentBase64Image = e.target.result.split(',')[1]; // Сохраняем Base64 без mimeType
+                    updateUIState('preview-ready');
+                };
+                reader.readAsDataURL(file);
+                // Если камера активна, останавливаем ее
+                stopCamera();
+            }
+        }
+
+        /**
+         * Запускает или останавливает камеру.
+         */
+        cameraButton.onclick = async () => {
+            if (videoStream) {
+                // Если камера активна, останавливаем ее
+                stopCamera();
+                cameraView.classList.add('hidden');
+                cameraButton.innerHTML = `
+                        <!-- SVG Icon for Camera -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        <span>Использовать Камеру</span>
+                    `;
+            } else {
+                // Запускаем камеру
+                try {
+                    videoStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
+                    videoFeed.srcObject = videoStream;
+                    await videoFeed.play();
+                    cameraView.classList.remove('hidden');
+                    cameraButton.innerHTML = `
+                        <!-- SVG Icon for Stop -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2A9 9 0 111 12a9 9 0 0118 0z" />
+                        </svg>
+                        <span>Остановить Камеру</span>
+                    `;
+                    // Очищаем превью файла
+                    previewContainer.classList.add('hidden');
+                    currentBase64Image = null;
+                    updateUIState('initial');
+                } catch (err) {
+                    console.error("Ошибка доступа к камере: ", err);
+                    errorDetails.textContent = `Ошибка доступа к камере: ${err.name}`;
+                    updateUIState('error');
+                }
+            }
+        };
+
+        /**
+         * Останавливает видеопоток.
+         */
+        function stopCamera() {
+            if (videoStream) {
+                videoStream.getTracks().forEach(track => track.stop());
+                videoStream = null;
+                videoFeed.srcObject = null;
+                cameraButton.innerHTML = `
+                        <!-- SVG Icon for Camera -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        <span>Использовать Камеру</span>
+                    `;
+            }
+        }
+
+
+        /**
+         * Делает снимок с видеопотока.
+         */
+        captureButton.onclick = () => {
+            if (videoStream) {
+                // Устанавливаем размеры canvas по видео
+                canvas.width = videoFeed.videoWidth;
+                canvas.height = videoFeed.videoHeight;
+                const ctx = canvas.getContext('2d');
+                // Рисуем кадр на canvas
+                ctx.drawImage(videoFeed, 0, 0, canvas.width, canvas.height);
+
+                // Получаем base64
+                const dataURL = canvas.toDataURL('image/jpeg', 0.9); // JPEG для меньшего размера
+                imagePreview.src = dataURL;
+                previewContainer.classList.remove('hidden');
+                currentBase64Image = dataURL.split(',')[1];
+                updateUIState('preview-ready');
+
+                // Опционально: останавливаем камеру после снимка
+                stopCamera();
+                cameraView.classList.add('hidden');
+            }
+        };
+
+        // --- Логика вызова Gemini API ---
+
+        /**
+         * Вызывает API Gemini для анализа изображения.
+         */
+        async function analyzeImage() {
+            if (!currentBase64Image) {
+                errorDetails.textContent = "Изображение для анализа не выбрано.";
+                updateUIState('error');
+                return;
+            }
+
+            updateUIState('loading');
+
+            const systemPrompt = "Вы — эксперт по сельскохозяйственной энтомологии и защите растений. Ваша задача — проанализировать предоставленное изображение повреждений (листьев, плодов, почвы) и определить вероятного вредителя или болезнь. Предоставьте полный и подробный ответ в формате Markdown на русском языке, который включает следующие разделы: \n\n### 1. Идентификация Проблемы \n\n* **Вероятный Вредитель/Болезнь:** [Название] \n\n### 2. Общая Информация о Вредителе \n\n* [Краткое описание внешнего вида, жизненного цикла и типа причиняемого вреда.] \n\n### 3. Меры Борьбы \n\n* **Химические:** [Список рекомендуемых активных веществ или типов препаратов.] \n* **Биологические/Органические:** [Список естественных врагов, биопрепаратов или органических средств.] \n\n### 4. Методология Сдерживания Популяции (Профилактика) \n\n* [Перечень агротехнических и профилактических мер.]";
+            
+            const userQuery = "Проанализируйте это изображение повреждения растения и предоставьте полный отчет согласно структуре.";
+
+            const payload = {
+                contents: [{
+                    parts: [
+                        { text: userQuery },
+                        {
+                            inlineData: {
+                                mimeType: "image/jpeg", // MIME-тип должен соответствовать формату
+                                data: currentBase64Image
+                            }
+                        }
+                    ]
+                }],
+                // Включаем Google Search для актуальности информации о вредителях и мерах борьбы
+                tools: [{ "google_search": {} }],
+                systemInstruction: {
+                    parts: [{ text: systemPrompt }]
+                }
+            };
+
+            // Логика экспоненциальной задержки для обработки ошибок API
+            const maxRetries = 3;
+            let lastError = null;
+
+            for (let attempt = 0; attempt < maxRetries; attempt++) {
+                try {
+                    const response = await fetch(API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(`API returned status ${response.status}: ${errorData.error.message}`);
+                    }
+
+                    const result = await response.json();
+                    const candidate = result.candidates?.[0];
+
+                    if (candidate && candidate.content?.parts?.[0]?.text) {
+                        const text = candidate.content.parts[0].text;
+                        let sources = [];
+
+                        // Извлечение источников (Grounding)
+                        const groundingMetadata = candidate.groundingMetadata;
+                        if (groundingMetadata && groundingMetadata.groundingAttributions) {
+                            sources = groundingMetadata.groundingAttributions
+                                .map(attribution => ({
+                                    uri: attribution.web?.uri,
+                                    title: attribution.web?.title,
+                                }))
+                                .filter(source => source.uri && source.title);
+                        }
+
+                        // Отображение отчета
+                        reportOutput.innerHTML = markdownToHtml(text);
+                        
+                        // Отображение источников
+                        sourcesList.innerHTML = '';
+                        if (sources.length > 0) {
+                            sources.forEach(source => {
+                                const li = document.createElement('li');
+                                const a = document.createElement('a');
+                                a.href = source.uri;
+                                a.target = "_blank";
+                                a.textContent = `${source.title} (${source.uri.substring(0, 50)}...)`;
+                                a.className = "text-blue-600 hover:text-blue-800 hover:underline"; /* Светлая тема, синий цвет */
+                                li.appendChild(a);
+                                sourcesList.appendChild(li);
+                            });
+                            sourcesOutput.classList.remove('hidden');
+                        } else {
+                            sourcesOutput.classList.add('hidden');
+                        }
+
+                        updateUIState('results');
+                        return; // Успех, выходим из цикла
+                    } else {
+                         throw new Error("Не удалось получить сгенерированный текст из ответа API.");
+                    }
+                } catch (error) {
+                    lastError = error;
+                    console.error(`Попытка ${attempt + 1} провалилась:`, error);
+                    if (attempt < maxRetries - 1) {
+                        const delay = Math.pow(2, attempt) * 1000;
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                    }
+                }
+            }
+
+            // Если все попытки провалились
+            errorDetails.textContent = `Ошибка: ${lastError.message || 'Неизвестная ошибка API.'}`;
+            updateUIState('error');
+        }
+
+        // --- Улучшенная функция Markdown в HTML (для форматирования отчета) ---
+        function markdownToHtml(markdown) {
+            // 1. Заголовки H3
+            let html = markdown.replace(/^###\s+(.*)$/gm, '<h3 class="text-2xl font-bold mt-6 mb-3 text-primary">$1</h3>');
+
+            // 2. Специфические жирные пункты (для Идентификации Проблемы)
+            html = html.replace(/^\*\s+\*\*([^*]+):\*\*\s+(.*)$/gm, '<p class="mb-2"><span class="font-bold text-gray-800">$1:</span> <span class="text-gray-700">$2</span></p>');
+
+            // 3. Конвертируем все остальные * пункты в <li>
+            html = html.replace(/^\*\s+(.*)$/gm, '<li>$1</li>');
+
+            // 4. Обертываем группы <li> в <ul>. 
+            const listPattern = /((?:<li[\s\S]*?<\/li>\s*)+)/g;
+            html = html.replace(listPattern, (match) => {
+                return `<ul class="list-disc list-inside space-y-1 ml-4 text-gray-700">${match}</ul>`;
+            });
+
+            // 5. Конвертируем оставшиеся двойные переносы строки (с текстом между ними) в абзацы.
+            html = html.replace(/\n\n/g, '@@PARAGRAPH_SEP@@');
+            
+            // 6. Удаляем оставшиеся одиночные переносы строки (внутри абзацев)
+            html = html.replace(/\n/g, ' ');
+
+            // 7. Разбиваем на абзацы и оборачиваем в <p>, игнорируя уже обработанные теги.
+            html = html.split('@@PARAGRAPH_SEP@@').map(p => {
+                p = p.trim();
+                if (p === '') return '';
+                // Если абзац уже начинается с тега (например, <h3>, <p>, <ul>), не оборачиваем его.
+                if (p.startsWith('<h3') || p.startsWith('<p') || p.startsWith('<ul')) {
+                    return p;
+                }
+                // Оборачиваем чистый текст в абзац
+                return `<p class="mb-3 text-gray-700">${p}</p>`;
+            }).join('');
+            
+            // Финальная очистка от лишних пробелов.
+            return html.trim();
+        }
+
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', () => {
+            updateUIState('initial');
+        });
+
+    </script>
+</body>
+</html>
