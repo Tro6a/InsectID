@@ -1,0 +1,8 @@
+{
+  "name": "insectid-gemini-proxy",
+  "version": "1.0.0",
+  "description": "Dependencies for Netlify Functions proxying Gemini API.",
+  "dependencies": {
+    "node-fetch": "^2.6.7"
+  }
+}
